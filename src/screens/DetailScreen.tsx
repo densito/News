@@ -1,12 +1,16 @@
 import React from "react";
-import { ScrollView, Image, Text, View } from "react-native";
-import { Card } from "react-native-paper";
+import { ScrollView, Image, Text, View, Linking } from "react-native";
+import { Card, Button } from "react-native-paper"; // Importa Button de react-native-paper
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { RootStackParamList } from "../types/Navigation"; // Importa los tipos de navegación
+import { RootStackParamList } from "../types/Navigation";
 
 export default function DetailScreen() {
   const route = useRoute<RouteProp<RootStackParamList, "Detail">>();
   const { news } = route.params;
+
+  const handleReadMore = () => {
+    Linking.openURL(news.url); // Abre la URL de la noticia en el navegador
+  };
 
   return (
     <ScrollView>
@@ -40,13 +44,24 @@ export default function DetailScreen() {
               day: "numeric",
             })}
           </Text>
-          <Text style={{ marginTop: 10 }}>{news.content}</Text>
+          <Text style={{ marginTop: 10 }}>
+            {news.content ||
+              "El contenido completo de la noticia no está disponible."}
+          </Text>
           <Text style={{ marginTop: 10, fontWeight: "bold" }}>
-            Autor: {news.author}
+            Autor: {news.author || "Desconocido"}
           </Text>
           <Text style={{ marginTop: 5, fontWeight: "bold" }}>
             Fuente: {news.source.name}
           </Text>
+          {/* Botón para leer más */}
+          <Button
+            mode="contained"
+            onPress={handleReadMore}
+            style={{ marginTop: 30 }}
+          >
+            Leer más
+          </Button>
         </Card.Content>
       </Card>
     </ScrollView>
